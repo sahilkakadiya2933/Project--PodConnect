@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="./style1.css" />
+    <title>Login to PodConnect</title>
+    <style>
+        /* Basic modal styles */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="content">
+            <h1>Welcome back to PodConnect.</h1>
+            <div class="tabs__panel">
+                <div class="panel active">
+                    <form id="login-form">
+                        <div class="input__group">
+                            <input type="email" id="email" placeholder=" " required />
+                            <label for="login-email">Email</label>
+                        </div>
+                        <div class="input__group">
+                            <input type="password" id="password" placeholder=" " required />
+                            <label for="login-password">Password</label>
+                            <span id="login-password-eye">
+                                <i class="ri-eye-off-fill"></i>
+                            </span>
+                        </div>
+                        <a href="./forgetPassword.html">Forgot password?</a>
+                        <button type="submit" class="btn btn-primary" id="login" value="Log In">Log In</button>
+                        <p>or</p>
+                    </form>
+
+                    <button class="gsi-material-button" id="google-login">
+                        <div class="gsi-material-button-state"></div>
+                        <div class="gsi-material-button-content-wrapper">
+                            <div class="gsi-material-button-icon">
+                                <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" xmlns:xlink="http://www.w3.org/1999/xlink" style="display: block;">
+                                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+                                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+                                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+                                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+                                    <path fill="none" d="M0 0h48v48H0z"></path>
+                                </svg>
+                            </div>
+                            <span class="gsi-material-button-contents">Sign in with Google</span>
+                            <span style="display: none;">Sign in with Google</span>
+                        </div>
+                    </button><br><br>
+                    <a href="register.html" id="signup">Don't have an account? <span>Sign Up</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for confirmation -->
+    <div id="confirmationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Data Stored Successfully</h2>
+            <p id="modalContent"></p>
+        </div>
+    </div>
+
+    <script src="./main.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        import { getDatabase, ref, set, get, child } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUUmJq5zDGIdy-opciPy4ixldP0T8JEEI",
+            authDomain: "podconnect-c0f5c.firebaseapp.com",
+            databaseURL: "https://podconnect-c0f5c-default-rtdb.firebaseio.com",
+            projectId: "podconnect-c0f5c",
+            storageBucket: "podconnect-c0f5c.appspot.com",
+            messagingSenderId: "379396316013",
+            appId: "1:379396316013:web:8f668338b89c44af151864"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const database = getDatabase(app);
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault(); // Prevent the default form submission
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+
+                    // Check if user details are in the database
+                    const dbRef = ref(database);
+                    get(child(dbRef, `users/${user.uid}`)).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            window.location.href = "index.html"; // Redirect to home page
+                        } else {
+                            alert('User details not found. Please register.');
+                        }
+                    }).catch((error) => {
+                        console.error(error);
+                        alert('Error fetching user details: ' + error.message);
+                    });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert('Error: ' + errorMessage);
+                });
+        });
+
+        // Google Login
+        document.getElementById('google-login').addEventListener('click', () => {
+            const provider = new GoogleAuthProvider();
+            signInWithPopup(auth, provider)
+                .then((result) => {
+                    const user = result.user;
+
+                    // Store user details in Firebase Realtime Database
+                    const userRef = ref(database, 'users/' + user.uid);
+                    set(userRef, {
+                        email: user.email,
+                        firstName: user.displayName ? user.displayName.split(' ')[0] : 'N/A',
+                        lastName: user.displayName ? user.displayName.split(' ').slice(1).join(' ') : 'N/A',
+                        username: user.displayName || user.email,
+                    }).then(() => {
+                        // Show confirmation modal
+                        const modal = document.getElementById('confirmationModal');
+                        const modalContent = document.getElementById('modalContent');
+                        // modalContent.textContent = `Email: ${user.email}\nFirst Name: ${user.displayName ? user.displayName.split(' ')[0] : 'N/A'}\nLast Name: ${user.displayName ? user.displayName.split(' ').slice(1).join(' ') : 'N/A'}`;
+                        // modal.style.display = 'block';
+
+                        // Redirect after a short delay to allow user to read the popup
+                        setTimeout(() => {
+                            window.location.href = "index.html"; // Redirect to home page
+                        }, 2000);
+                    }).catch((error) => {
+                        console.error(error);
+                        alert('Error storing user details: ' + error.message);
+                    });
+                }).catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    alert('Error: ' + errorMessage);
+                });
+        });
+
+        // Close the modal when the user clicks on <span> (x)
+        const modal = document.getElementById('confirmationModal');
+        const span = document.getElementsByClassName('close')[0];
+        span.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close the modal when the user clicks anywhere outside of the modal
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>

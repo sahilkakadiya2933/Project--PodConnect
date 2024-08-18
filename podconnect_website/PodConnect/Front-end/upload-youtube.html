@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodConnect - Transcribe via YouTube</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="link-upload-page youtube-page">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="#">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="instruction.html">Instruction Guide</a></li>
+                <li class="nav-item"><a class="nav-link" href="podcasts.html">Podcasts</a></li>
+                <li class="nav-item"><a class="nav-link" href="upload-options.html">Upload Options</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./profile.html">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./Transcription/history.html">History</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="login.html" id="auth-button">Log In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="header">
+        <div class="overlay"></div>
+        <div class="container h-100">
+            <div class="d-flex h-100 text-center align-items-center">
+                <div class="w-100 text-white">
+                    <h1 class="display-3">Transcribe via YouTube</h1>
+                    <p>Transcribe your podcast using links from YouTube.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="my-5">
+        <div class="container">
+            <h2 class="text-center">Transcribe Using YouTube Link</h2>
+            <form id="youtube-link-form" class="my-4">
+                <div class="form-group">
+                    <label for="youtube-link">Transcribe Link</label>
+                    <input type="text" class="form-control" id="youtube-link" placeholder="Enter YouTube link">
+                </div>
+                <button type="submit" class="btn btn-primary">Transcribe</button>
+            </form>
+            <div id="transcription-result" class="mt-5">
+                <h3>Transcription Result</h3>
+                <p id="transcription-text">The transcription result will appear here.</p>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUUmJq5zDGIdy-opciPy4ixldP0T8JEEI",
+            authDomain: "podconnect-c0f5c.firebaseapp.com",
+            databaseURL: "https://podconnect-c0f5c-default-rtdb.firebaseio.com",
+            projectId: "podconnect-c0f5c",
+            storageBucket: "podconnect-c0f5c.appspot.com",
+            messagingSenderId: "379396316013",
+            appId: "1:379396316013:web:8f668338b89c44af151864"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+
+        // Check authentication status and update the button text
+        onAuthStateChanged(auth, (user) => {
+            const authButton = document.getElementById('auth-button');
+            if (user) {
+                authButton.textContent = 'Log Out';
+                authButton.href = '#';
+                authButton.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        alert('You have been logged out.');
+                        window.location.href = 'login.html';
+                    }).catch((error) => {
+                        console.error('Sign out error:', error);
+                    });
+                });
+            } else {
+                authButton.textContent = 'Log In';
+                authButton.href = 'login.html';
+            }
+        });
+    </script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            firebase.auth().onAuthStateChanged(function (user) {
+                if (!user) {
+                    // User is not logged in, redirect to login page
+                    window.location.href = 'login.html';
+                }
+                if (user) {
+                    // User is signed in, do nothing or load the page
+                    console.log('User is signed in');
+                } else {
+                    // No user is signed in, redirect to login page
+                    window.location.href = 'login.html';
+                }
+            });
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Stream</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #6441A5 0%, #8A2BE2 30%, #A74AC7 100%);
+            background-attachment: fixed;
+            padding: 20px;
+            color: #fffdfd;
+        }
+
+        .navbar-gradient {
+            background: linear-gradient(to right, #5ffffc, #c88cd5);
+        }
+
+        .bg-cover {
+            background: url('https://th.bing.com/th/id/OIP.8Ip-fZmPKYEruRSaDpvy0QHaEK?w=309&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7https://th.bing.com/th/id/OIP.8Ip-fZmPKYEruRSaDpvy0QHaEK?w=309&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7') no-repeat center center;
+            background-size: cover;
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+            position: relative;
+        }
+
+        .bg-cover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .bg-cover:hover::after {
+            opacity: 1;
+        }
+
+        .bg-cover .content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .content-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            margin-top: -40px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-title {
+            margin-bottom: 20px;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            border-radius: 50px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        footer p {
+            margin: 0;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="index.html">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="Transcription/realTimeTranscribe.html">Real-Time Transcription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../podcasts.html">Search Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../upload-options.html">Transcribe Podcasts</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../login.html">Log In</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    <div id="loading" class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+
+    <div class="container content-container" id="videoContainer" data-aos="fade-up" style="display: none;">
+        <div id="player" class="player"></div>
+        <div class="subtitle-box" id="subtitles">Subtitles will appear here...</div>
+</div>
+
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
+<script src="playTwitch.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

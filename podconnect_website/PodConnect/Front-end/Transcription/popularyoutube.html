@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Podcast Videos</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #d30202 0%, #f52828 30%, #f34c4c 100%);
+            background-attachment: fixed;
+            padding: 20px;
+            color: #fffdfd;
+        }
+
+        .navbar-light .navbar-brand {
+            color: #333;
+        }
+
+        .navbar-light .navbar-nav .nav-link {
+            color: #333;
+        }
+
+        .video-card {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: row;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            background-color: #fff;
+            color: #333;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .video-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .video-thumbnail {
+            max-width: 350px;
+            margin-right: 20px;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .card-body {
+            flex: 1;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+        }
+
+        .channel-info,
+        .description,
+        .card-text {
+            font-size: 0.875rem;
+            color: #555;
+        }
+
+        .btn-primary {
+            background-color: #ff0000;
+            border-color: #ff0000;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #cc0000;
+            border-color: #cc0000;
+        }
+
+        #loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            display: none;
+            width: 100px;
+            height: 100px;
+        }
+
+        .spinner-grow {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="index.html">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="realTimeTranscribe.html">Real-Time Transcription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../podcasts.html">Search Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../upload-options.html">Transcribe Podcasts</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="../login.html">Log In</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="loading" class="spinner-grow text-light" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
+
+    <div class="container mt-5 pt-5">
+        <h1 class="text-center mb-5 animate__animated animate__fadeInDown">Top 10 Trending Youtube Podcasts !!</h1>
+        <div id="videos-container"></div>
+        <div class="card video-card mt-5" data-aos="fade-up" id="transcribe-form-card">
+            <div class="card-body">
+                <h5 class="card-title">Didn't find what you like?</h5>
+                <p class="card-text">You can transcribe your favorite podcast by entering the link below!</p>
+                <form id="transcribe-form">
+                    <div class="form-group">
+                        <input type="url" class="form-control" id="podcast-link" placeholder="Enter YouTube link" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Transcribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+    <script src="popularyoutube.js"></script>
+    <script>
+      document.getElementById('transcribe-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const podcastLink = document.getElementById('podcast-link').value;
+        const youtubeVideoPattern = /^https:\/\/www\.youtube\.com\/watch\?v=.*$/;
+        if (youtubeVideoPattern.test(podcastLink)) {
+            // Logic to handle podcast link submission and show transcription result goes here.
+            window.location.href = `playyoutube.html?videoUrl=${encodeURIComponent(podcastLink)}`;
+        } else {
+            alert('Please enter a valid YouTube video link that contains "v=".');
+        }
+    });
+    </script>
+</body>
+
+</html>

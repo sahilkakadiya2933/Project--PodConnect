@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Twitch Stream</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-title {
+            margin-bottom: 20px;
+        }
+        .twitch-embed {
+            margin-top: 20px;
+        }
+        #subtitles {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="../index.html">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="../instruction.html">Instruction Guide</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../podcasts.html">Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../upload-options.html">Transcribe Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="../profile.html">Profile</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button><a class="nav-link" href="../login.html" id="auth-button">Log In</a></button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="form-title text-center">Submit Your Twitch Link</h3>
+                    <form id="twitch-form" enctype="multipart/form-data" method="post">
+                        <div class="form-group">
+                            <label for="twitchLink">Twitch Link</label>
+                            <input type="url" class="form-control" id="twitchLink" name="link" placeholder="Enter Twitch link" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div id="twitch-embed" class="twitch-embed"></div>
+            <div id="subtitles"></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyAUUmJq5zDGIdy-opciPy4ixldP0T8JEEI",
+        authDomain: "podconnect-c0f5c.firebaseapp.com",
+        databaseURL: "https://podconnect-c0f5c-default-rtdb.firebaseio.com",
+        projectId: "podconnect-c0f5c",
+        storageBucket: "podconnect-c0f5c.appspot.com",
+        messagingSenderId: "379396316013",
+        appId: "1:379396316013:web:8f668338b89c44af151864"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth();
+
+    // Check authentication status and update the button text
+    onAuthStateChanged(auth, (user) => {
+        const authButton = document.getElementById('auth-button');
+        if (!user) {
+            // User is not logged in, redirect to login page
+            window.location.href = '../login.html';
+        }
+        if (user) {
+            
+            authButton.textContent = 'Log Out';
+            authButton.href = '#';
+            authButton.addEventListener('click', () => {
+                signOut(auth).then(() => {
+                    alert('You have been logged out.');
+                    window.location.href = '../login.html';
+                }).catch((error) => {
+                    console.error('Sign out error:', error);
+                });
+            });
+        } else {
+            authButton.textContent = 'Log In';
+            authButton.href = '../login.html';
+        }
+    });
+</script>
+<script src="https://embed.twitch.tv/embed/v1.js"></script>
+<script src="twitch.js"></script>
+
+<!-- <script>
+    var clipId = 'ObeseAttractiveFennelPartyTime-rNaszXaqW7LDlvEe';
+
+    var player = new  Twitch.Embed("twitch-embed", {
+        width: 640,
+        height: 360,
+        parent: ["localhost"], // Replace with your actual hostname if different
+        layout: "video",
+        autoplay: true,
+        video: 2158330589
+    })
+
+    function getCurrentTime() {
+            var currentTime = player.getCurrentTime();
+            console.log('Current time:', currentTime);
+        }
+    
+        setInterval(getCurrentTime, 1000);
+</script> -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

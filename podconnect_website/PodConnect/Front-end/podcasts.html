@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search for Podcasts</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <style>
+        .navbar-gradient {
+            background: linear-gradient(to right, #5ffffc, #c88cd5);
+        }
+
+        .hero-section {
+            position: relative;
+            height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-align: center;
+            overflow: hidden;
+            padding: 40px;
+            box-sizing: border-box;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('photos/download.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: blur(10px);
+            z-index: -1;
+            margin: 20px;
+            border-top: solid 80px white;
+            border-bottom: solid 20px white;
+            border-left: solid 20px white;
+            border-right: solid 20px white;
+        }
+
+        .hero-section .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .section {
+            padding: 60px 0;
+        }
+
+        .section h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .section p {
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+
+        footer {
+            background-color: #f1f1f1;
+            padding: 20px 0;
+        }
+
+        footer p {
+            margin: 0;
+            color: #333;
+        }
+
+        .podcast-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-body p {
+            flex-grow: 1;
+        }
+
+        .modal-body {
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+
+<body class="podcast-page">
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="index.html">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="Transcription/realTimeTranscribe.html">Real-Time Transcription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="podcasts.html">Search Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="upload-options.html">Transcribe Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./profile.html">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./Transcription/history.html">History</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button><a class="nav-link" href="login.html" id="auth-button">Log In</a></button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <section class="hero-section">
+        <div class="container" data-aos="fade-down">
+            <h1 class="display-4">Discover Amazing Podcasts</h1>
+            <p class="lead">Find your next favorite podcast by searching below.</p>
+        </div>
+    </section>
+
+    <section class="my-5">
+        <div class="container">
+            <h2 class="text-center" data-aos="fade-up">Search for Podcasts</h2>
+            <form id="search-form" class="my-4" data-aos="fade-up">
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input type="text" class="form-control" id="search-query" placeholder="Search Podcast">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <select class="form-control" id="Genre">
+                            <option value="all">Filter by Genre</option>
+                            <option value="133">Comedy</option>
+                            <option value="99">News</option>
+                            <option value="135">True Crime</option>
+                            <option value="89">Fitness</option>
+                            <option value="209">History</option>
+                            <option value="88">Health & Fitness</option>
+                            <option value="77">Sports</option>
+                            <option value="107">Science</option>
+                            <option value="100">Arts</option>
+                            <option value="93">Business</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="submit">Search</button>
+            </form>
+            <div id="trending" class="text-center" data-aos="fade-up"></div>
+            <div id="results" class="row" data-aos="fade-up"></div>
+            <div id="captions" class="mt-5"></div> <!-- Captions container -->
+        </div>
+    </section>
+
+    <div class="modal fade" id="podcastModal" tabindex="-1" role="dialog" aria-labelledby="podcastModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="podcastModalLabel">Podcast Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img id="modal-podcast-image" src="" alt="Podcast Image" class="img-fluid mb-3">
+                    <h5 id="modal-podcast-title"></h5>
+                    <p id="modal-podcast-description"></p>
+                    <p id="modal-podcast-audio-link"></p>
+                    <button class="btn btn-primary btn-block transcribe-button" data-audio="${audioLink}">Transcribe Podcast</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+
+            const resultsContainer = document.getElementById('results');
+            const captionsContainer = document.getElementById('captions');
+            const trendingContainer = document.getElementById('trending');
+
+            trendingContainer.innerHTML = "<h3> Trending Podcasts 🔥 </h3>";
+
+            function escapeHTML(str) {
+                var temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/bestpodcasts/', {
+                    method: 'POST',
+                    body: " ",
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const podcasts = Array.isArray(data) ? data : [data]; // making sure data received is an array
+
+                resultsContainer.innerHTML = ''; // Clear previous results
+                captionsContainer.innerHTML = ''; // Clear previous results
+
+                if (podcasts.length === 0) {
+                    captionsContainer.innerHTML = "<p>No podcasts found.</p>";
+                } else {
+                    podcasts.forEach((podcast, index) => {
+                        if (!podcast) {
+                            return;
+                        }
+
+                        const podcastTitle = escapeHTML(podcast["Podcast Title"]);
+                        const audioLink = escapeHTML(podcast["Audio link"]);
+                        const imagelink = escapeHTML(podcast["Image"]);
+                        const descript = podcast["Description"]; // Do not sanitize description here
+
+                        const podcastHTML = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card podcast-card" data-toggle="modal" data-target="#podcastModal" data-title="${podcastTitle}" data-description="${escapeHTML(descript)}" data-image="${imagelink}" data-audio="${audioLink}">
+                            <img src="${imagelink}" class="card-img-top" alt="Podcast Image" style="height: 200px; object-fit: cover;"/>
+                            <div class="card-body">
+                                <h5 class="card-title">${podcastTitle}</h5>
+                                <p class="card-text">${descript.slice(0, 100)}...</p>
+                                <button class="btn btn-primary btn-block transcribe-button" data-audio="${audioLink}">Transcribe Podcast</button>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+
+                        resultsContainer.innerHTML += podcastHTML;
+                    });
+
+                    // Add event listeners for the dynamically created podcast cards
+                    document.querySelectorAll('.podcast-card').forEach(function (card) {
+                        card.addEventListener('click', function () {
+                            var title = card.getAttribute('data-title');
+                            var description = card.getAttribute('data-description');
+                            var image = card.getAttribute('data-image');
+                            var audio = card.getAttribute('data-audio');
+
+                            document.getElementById('modal-podcast-image').src = image;
+                            document.getElementById('modal-podcast-title').innerText = title;
+                            document.getElementById('modal-podcast-description').innerHTML = description; // Use innerHTML here
+                            document.getElementById('modal-podcast-audio-link').innerHTML = `<strong>Download Audio:</strong> <a href="${audio}" target="_blank">${audio}</a>`;
+
+                            $('#podcastModal').modal('show');
+                        });
+                    });
+
+                    // Add event listener for the transcribe buttons
+                    document.querySelectorAll('.transcribe-button').forEach(function (button) {
+                        button.addEventListener('click', function (event) {
+                            event.stopPropagation(); // Prevent triggering the modal
+                            var audioLink = button.getAttribute('data-audio');
+                            console.log(audioLink);
+                            window.location.href = `Transcription/podcastaddict.html?videoUrl=${encodeURIComponent(audioLink)}`;
+                        });
+                    });
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                captionsContainer.innerHTML = "<p>Error occurred while fetching the podcast information.</p>";
+            } finally {
+                
+            }
+        });
+        
+        
+    </script>
+
+    <script>
+        AOS.init();
+        document.getElementById('search-form').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            var searchQuery = document.getElementById('search-query').value.trim().toLowerCase();
+            var genre = document.getElementById('Genre').value;
+            const submitButton = document.getElementById("submit");
+            const resultsContainer = document.getElementById('results');
+            const captionsContainer = document.getElementById('captions');
+            const trendingContainer = document.getElementById('trending');
+
+            trendingContainer.innerHTML = "<h3> Top Results </h3>";
+
+            // Form submission and handling
+            submitButton.disabled = true;
+
+            const formData = new FormData();
+            formData.append("search", searchQuery);
+            formData.append("genre", genre);
+
+            function escapeHTML(str) {
+                var temp = document.createElement('div');
+                temp.textContent = str;
+                return temp.innerHTML;
+            }
+
+            try {
+                const response = await fetch('http://localhost:8000/findpodcast/', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const data = await response.json();
+                const podcasts = Array.isArray(data) ? data : [data]; // making sure data received is an array
+
+                resultsContainer.innerHTML = ''; // Clear previous results
+                captionsContainer.innerHTML = ''; // Clear previous results
+
+                if (podcasts.length === 0) {
+                    captionsContainer.innerHTML = "<p>No podcasts found.</p>";
+                } else {
+                    podcasts.forEach((podcast, index) => {
+                        if (!podcast) {
+                            return;
+                        }
+
+                        const podcastTitle = escapeHTML(podcast["Podcast Title"]);
+                        const audioLink = escapeHTML(podcast["Audio link"]);
+                        const imagelink = escapeHTML(podcast["Image"]);
+                        const descript = podcast["Description"]; // Do not sanitize description here
+
+                        const podcastHTML = `
+                    <div class="col-md-4 mb-4">
+                        <div class="card podcast-card" data-toggle="modal" data-target="#podcastModal" data-title="${podcastTitle}" data-description="${escapeHTML(descript)}" data-image="${imagelink}" data-audio="${audioLink}">
+                            <img src="${imagelink}" class="card-img-top" alt="Podcast Image" style="height: 200px; object-fit: cover;"/>
+                            <div class="card-body">
+                                <h5 class="card-title">${podcastTitle}</h5>
+                                <p class="card-text">${descript.slice(0, 100)}...</p>
+                                <button class="btn btn-primary btn-block transcribe-button" data-audio="${audioLink}">Transcribe Podcast</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                        resultsContainer.innerHTML += podcastHTML;
+                    });
+
+                    // Add event listeners for the dynamically created podcast cards
+                    document.querySelectorAll('.podcast-card').forEach(function (card) {
+                        card.addEventListener('click', function () {
+                            var title = card.getAttribute('data-title');
+                            var description = card.getAttribute('data-description');
+                            var image = card.getAttribute('data-image');
+                            var audio = card.getAttribute('data-audio');
+
+                            document.getElementById('modal-podcast-image').src = image;
+                            document.getElementById('modal-podcast-title').innerText = title;
+                            document.getElementById('modal-podcast-description').innerHTML = description; // Use innerHTML here
+                            document.getElementById('modal-podcast-audio-link').innerHTML = `<strong>Download Audio:</strong> <a href="${audio}" target="_blank">${audio}</a>`;
+
+                            $('#podcastModal').modal('show');
+                        });
+                    });
+
+                    // Add event listener for the transcribe buttons
+                    document.querySelectorAll('.transcribe-button').forEach(function (button) {
+                        button.addEventListener('click', function (event) {
+                            event.stopPropagation(); // Prevent triggering the modal
+                            var audioLink = button.getAttribute('data-audio');
+                            console.log(audioLink);
+                            window.location.href = `Transcription/podcastaddict.html?videoUrl=${encodeURIComponent(audioLink)}`;
+                        });
+                    });
+                }
+
+            } catch (error) {
+                console.error('Fetch error:', error);
+                captionsContainer.innerHTML = "<p>Error occurred while fetching the podcast information.</p>";
+            } finally {
+                submitButton.disabled = false;
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>

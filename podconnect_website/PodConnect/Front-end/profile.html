@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PodConnect - Profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-image: url('./photos/profile-background.jpg');
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="profile-page">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+        <a class="navbar-brand" href="index.html">PodConnect</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="Transcription/realTimeTranscribe.html">Real-Time Transcription</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="podcasts.html">Search Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="upload-options.html">Transcribe Podcasts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./profile.html">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="./Transcription/history.html">History</a>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <button><a class="nav-link" href="login.html" id="auth-button">Log Out</a></button>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <header class="header">
+        <div class="container h-100">
+            <div class="d-flex h-100 text-center align-items-center">
+                <div class="w-100 text-white">
+                    <h1 class="display-3 animate__animated animate__fadeInDown">Your Profile</h1>
+                    <p class="lead animate__animated animate__fadeInUp">Welcome back! View and edit your profile details below.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section class="my-5">
+        <div class="container">
+            <h2 class="text-center" data-aos="fade-up">Profile Details</h2>
+            <form id="profile-form" class="my-4" data-aos="fade-up">
+                <div class="form-group">
+                    <label for="firstname">First Name:</label>
+                    <input type="text" class="form-control" id="firstname" placeholder="Enter your First name" disabled />
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last Name:</label>
+                    <input type="text" class="form-control" id="lastname" placeholder="Enter your Last name" disabled />
+                </div>
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" class="form-control" id="username" placeholder="Enter username" disabled />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" placeholder="Enter email" disabled />
+                </div>
+
+                <button type="button" class="btn btn-primary" id="editProfile" value="Edit Profile">Edit Profile</button>
+                <button type="submit" class="btn btn-success" id="saveProfile" style="display: none;">Save</button>
+            </form>
+        </div>
+    </section>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <script>
+        AOS.init();
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getDatabase, ref, onValue, set, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+        import { getAuth, onAuthStateChanged, updateEmail, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUUmJq5zDGIdy-opciPy4ixldP0T8JEEI",
+            authDomain: "podconnect-c0f5c.firebaseapp.com",
+            databaseURL: "https://podconnect-c0f5c-default-rtdb.firebaseio.com",
+            projectId: "podconnect-c0f5c",
+            storageBucket: "podconnect-c0f5c.appspot.com",
+            messagingSenderId: "379396316013",
+            appId: "1:379396316013:web:8f668338b89c44af151864"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            const authButton = document.getElementById('auth-button');
+            if (!user) {
+                window.location.href = 'login.html';
+            }
+            if (user) {
+                authButton.textContent = 'Log Out';
+                authButton.href = '#';
+                authButton.addEventListener('click', () => {
+                    signOut(auth).then(() => {
+                        window.location.href = 'login.html';
+                    }).catch((error) => {
+                        console.error('Sign out error:', error);
+                    });
+                });
+            } else {
+                authButton.textContent = 'Log In';
+                authButton.href = 'login.html';
+            }
+        });
+
+        function fetchUserProfile() {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    const userRef = ref(database, 'users/' + user.uid);
+                    onValue(userRef, (snapshot) => {
+                        const userData = snapshot.val();
+                        
+                        document.getElementById('firstname').value = userData.username;
+                        document.getElementById('lastname').value = userData.username;
+                        document.getElementById('username').value = userData.username;
+                        document.getElementById('email').value = userData.email;
+                    });
+                } else {
+                    window.location.href = 'login.html';
+                }
+            });
+        }
+
+        document.getElementById('firstname').disabled = true;
+        document.getElementById('lastname').disabled = true;
+        document.getElementById('username').disabled = true;
+        document.getElementById('email').disabled = true;
+
+        fetchUserProfile();
+
+        function enableEdit() {
+            document.getElementById('firstname').disabled = false;
+            document.getElementById('lastname').disabled = false;
+            document.getElementById('username').disabled = false;
+            document.getElementById('editProfile').style.display = 'none';
+            document.getElementById('saveProfile').style.display = 'inline-block';
+        }
+
+        document.getElementById('editProfile').addEventListener('click', enableEdit);
+
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const updatedFirstName = document.getElementById('firstname').value;
+            const updatedLastName = document.getElementById('lastname').value;
+            const updatedUsername = document.getElementById('username').value;
+            const updatedEmail = document.getElementById('email').value;
+
+            const user = auth.currentUser;
+
+            const userRef = ref(database, 'users/' + user.uid);
+            update(userRef, {
+                firstname: updatedFirstName,
+                lastname: updatedLastName,
+                username: updatedUsername,
+                email: updatedEmail
+            }).then(() => {
+                document.getElementById('firstname').disabled = true;
+                document.getElementById('lastname').disabled = true;
+                document.getElementById('username').disabled = true;
+                document.getElementById('email').disabled = true;
+                document.getElementById('editProfile').style.display = 'inline-block';
+                document.getElementById('saveProfile').style.display = 'none';
+            }).catch((error) => {
+                alert('Error saving profile details in Firebase: ' + error.message);
+            });
+        });
+    </script>
+</body>
+
+</html>
